@@ -1,25 +1,47 @@
 package com.bytearchitect.controller;
+
+import com.bytearchitect.dto.TopicDTO;
 import com.bytearchitect.model.Topic;
+import com.bytearchitect.service.TopicService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/topics")
 public class TopicController {
-    private static final Map<Integer,Topic> topicStore = new HashMap<>();
 
-    // Prepopulate with dummy data
-    static {
-        topicStore.put(1, new Topic(1, "REST API Design", "Learn REST fundamentals"));
-        topicStore.put(2, new Topic(2, "System Design", "Distributed systems, scalability, etc."));
-    }
-    @GetMapping("/{id}")
-    public Topic getTopicById(@PathVariable int id){
-        return topicStore.get(id); // we will handle 404s
+    private final TopicService topicService;
+
+    @Autowired
+    public TopicController(TopicService topicService) {
+        this.topicService = topicService;
     }
 
     @GetMapping
-    public List<Topic> getAllTopics(){
-        return new ArrayList<>(topicStore.values());
+    public List<TopicDTO> getAllTopics() {
+        return topicService.getAllTopics();
+    }
+
+    @GetMapping("/{id}")
+    public TopicDTO getTopicById(@PathVariable int id) {
+        return topicService.getTopicById(id);
+    }
+
+    @PostMapping
+    public void addTopic(@Valid @RequestBody TopicDTO topic) {
+        topicService.addTopic(topic);
+    }
+
+    @PutMapping("/{id}")
+    public void updateTopic(@PathVariable int id, @RequestBody Topic topic) {
+        topicService.updateTopic(id, topic);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteTopic(@PathVariable int id) {
+        topicService.deleteTopic(id);
     }
 }

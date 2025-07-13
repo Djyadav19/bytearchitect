@@ -1,44 +1,63 @@
 package com.bytearchitect.service.impl;
 
+import com.bytearchitect.dto.TopicDTO;
+import com.bytearchitect.exception.DuplicateResourceException;
+import com.bytearchitect.exception.ResourceNotFoundException;
 import com.bytearchitect.model.Topic;
 import com.bytearchitect.repository.TopicRepository;
 import com.bytearchitect.service.TopicService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Service
 public class TopicServiceImpl implements TopicService {
 
     private final TopicRepository topicRepository;
-
+    private final ModelMapper modelMapper;
     @Autowired
-    public TopicServiceImpl(TopicRepository topicRepository) {
+    public TopicServiceImpl(TopicRepository topicRepository, ModelMapper modelMapper) {
         this.topicRepository = topicRepository;
+        this.modelMapper = modelMapper;
     }
 
 
     @Override
-    public List<Topic> getAllTopics() {
-        return topicRepository.findAll();
+    public List<TopicDTO> getAllTopics() {
+        return topicRepository.findAll().stream()
+                .map(topic-> modelMapper.map(topic, TopicDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Topic getTopicById(String id) {
-        return topicRepository.findById(id).orElse(null);
+    public TopicDTO getTopicById(int id) {
+        Topic topic =  topicRepository.findById(String.valueOf(id)).orElseThrow(()->new ResourceNotFoundException("Item not found with id: "+id));
+        return modelMapper.map(topic,TopicDTO.class);
     }
 
     @Override
-    public void addTopic(Topic topic) {
+    public void addTopic(TopicDTO topicdto) {
+        /*Topic topic = new Topic(topicdto.getId(),
+                topicdto.getTitle(),
+                topicdto.getDescription()
+                );*/
+        if (topicRepository.existsById(String.valueOf(topicdto.getId()))) {
+            throw new DuplicateResourceException("Topic with ID " + topicdto.getId() + " already exists");
+        }
+        Topic topic = modelMapper.map(topicdto,Topic.class);
         topicRepository.save(topic);
     }
 
     @Override
-    public void updateTopic(String id, Topic topic) {
+    public void updateTopic(int id, Topic topic) {
         topicRepository.save(topic);
     }
 
     @Override
-    public void deleteTopic(String id) {
-        topicRepository.deleteById(id);
+    public void deleteTopic(int id) {
+        topicRepository.deleteById(String.valueOf(id));
     }
 }
