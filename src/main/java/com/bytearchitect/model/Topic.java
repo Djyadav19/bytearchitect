@@ -1,6 +1,14 @@
-package com.bytearchitect.bytearchitect.model;
+package com.bytearchitect.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "topics")
 public class Topic{
+
+    @Id
     private int id;
     private String title;
     private String description;

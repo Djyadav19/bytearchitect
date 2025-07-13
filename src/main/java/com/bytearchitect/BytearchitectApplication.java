@@ -1,4 +1,4 @@
-package com.bytearchitect.bytearchitect;
+package com.bytearchitect;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

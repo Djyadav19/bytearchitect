@@ -1,4 +1,4 @@
-package com.bytearchitect.bytearchitect;
+package com.bytearchitect;
 import org.springframework.web.bind.annotation.*;
 /**
  * we will use RestController annotation
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/ping")
 public class PingController{
-    @GetMapping("/ping")
+    @GetMapping("")
     public String ping(){
         return "Pong";
     }

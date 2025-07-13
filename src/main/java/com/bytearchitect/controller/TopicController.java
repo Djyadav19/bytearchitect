@@ -1,5 +1,5 @@
-package com.bytearchitect.bytearchitect.controller;
-import com.bytearchitect.bytearchitect.model.Topic;
+package com.bytearchitect.controller;
+import com.bytearchitect.model.Topic;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -15,7 +15,6 @@ public class TopicController {
     }
     @GetMapping("/{id}")
     public Topic getTopicById(@PathVariable int id){
-
         return topicStore.get(id); // we will handle 404s
     }
 

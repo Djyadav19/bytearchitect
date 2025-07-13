@@ -1,4 +1,4 @@
-package com.bytearchitect.bytearchitect;
+package com.bytearchitect;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
